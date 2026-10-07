@@ -19,12 +19,12 @@ function Ver($name, [scriptblock]$probe) {
 $rows = @(
     @{ Tool = 'claude';    Want = 'Claude Code';     Have = Ver 'claude'    { claude --version } ;     Fix = 'npm i -g @anthropic-ai/claude-code (or the desktop app)' }
     @{ Tool = 'aws';       Want = 'AWS CLI v2';      Have = Ver 'aws'       { aws --version } ;        Fix = 'winget install Amazon.AWSCLI' }
-    @{ Tool = 'tofu';      Want = 'OpenTofu 1.12.x'; Have = Ver 'tofu'      { tofu version } ;         Fix = 'winget install OpenTofu.Tofu' }
+    @{ Tool = 'tofu';      Want = 'OpenTofu 1.12.x'; Have = Ver 'tofu'      { tofu version } ;         Fix = 'GitHub release opentofu/opentofu v1.12.x -> ~/.local/bin (verify SHA256SUMS)' }
     @{ Tool = 'terraform'; Want = 'optional';        Have = Ver 'terraform' { terraform version } ;    Fix = '(optional) winget install Hashicorp.Terraform' }
-    @{ Tool = 'tflint';    Want = '0.64.x';          Have = Ver 'tflint'    { tflint --version } ;     Fix = 'GitHub release terraform-linters/tflint -> tools/bin' }
-    @{ Tool = 'checkov';   Want = '3.3.x';           Have = Ver 'checkov'   { checkov --version } ;    Fix = 'uv tool install "checkov==3.3.*"' }
-    @{ Tool = 'opa';       Want = '1.21.x';          Have = Ver 'opa'       { opa version } ;          Fix = 'GitHub release open-policy-agent/opa -> tools/bin' }
-    @{ Tool = 'conftest';  Want = '0.70.x';          Have = Ver 'conftest'  { conftest --version } ;   Fix = 'GitHub release open-policy-agent/conftest -> tools/bin' }
+    @{ Tool = 'tflint';    Want = '0.64.x';          Have = Ver 'tflint'    { tflint --version } ;     Fix = 'GitHub release terraform-linters/tflint -> ~/.local/bin' }
+    @{ Tool = 'checkov';   Want = '3.3.x';           Have = Ver 'checkov'   { checkov --version } ;    Fix = 'uv tool install "checkov==3.3.*" (then fix checkov.cmd, see CLAUDE.md)' }
+    @{ Tool = 'opa';       Want = '1.21.x';          Have = Ver 'opa'       { opa version } ;          Fix = 'GitHub release open-policy-agent/opa -> ~/.local/bin' }
+    @{ Tool = 'conftest';  Want = '0.70.x';          Have = Ver 'conftest'  { conftest --version } ;   Fix = 'GitHub release open-policy-agent/conftest v0.70.x -> ~/.local/bin' }
     @{ Tool = 'uv';        Want = '0.12.x';          Have = Ver 'uv'        { uv --version } ;         Fix = 'uv self update' }
     @{ Tool = 'gh';        Want = 'logged in (M8)';  Have = Ver 'gh'        { gh --version } ;         Fix = 'winget install GitHub.cli; gh auth login' }
     @{ Tool = 'git';       Want = '2.4x+';           Have = Ver 'git'       { git --version } ;        Fix = 'winget install Git.Git' }

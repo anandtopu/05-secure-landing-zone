@@ -29,11 +29,11 @@ The spec federates IAM Identity Center with Entra ID (SAML + SCIM). If I don't h
 |---|---|---|---|
 | Claude Code | 2.1.261 | current | OK |
 | AWS CLI | 2.34.48 | v2 | OK; configure **SSO / Identity Center** login (`aws configure sso`), never long-lived keys |
-| OpenTofu | **missing** | 1.12.x | `winget install OpenTofu.Tofu` (or the GitHub release) |
+| OpenTofu | 1.12.7 | 1.12.x | OK. GitHub release, SHA-256 verified, in `~/.local/bin`. Stay on 1.12.x even though 1.13 is out (spec pin) |
 | Terraform | 1.15.3 | optional | Spec code is OpenTofu 1.12 / Terraform 1.16-compatible. Use `tofu`; keep Terraform only for comparison (licence note: BSL) |
-| TFLint | **missing** | 0.64.x | GitHub release into `tools/bin/` |
-| Checkov | **missing** | 3.3.x | `uv tool install checkov==3.3.*` |
-| OPA / Conftest | **missing** | 1.21 / 0.70.x | GitHub releases into `tools/bin/` |
+| TFLint | 0.64.0 | 0.64.x | OK. GitHub release, SHA-256 verified, in `~/.local/bin` |
+| Checkov | 3.3.25 | 3.3.x | OK. `uv tool install "checkov==3.3.*"`. The wheel's `checkov.cmd` runs the first `python` on PATH, so `~/.local/bin/checkov.cmd` is replaced with a launcher for the uv tool env; redo that after any `uv tool upgrade checkov` |
+| OPA / Conftest | 1.21.1 / 0.70.1 | 1.21 / 0.70.x | OK. GitHub releases, SHA-256 verified, in `~/.local/bin` (on PATH; `tools/bin/` isn't). Conftest stays on 0.70.x even though 0.71 is out |
 | Trivy | **missing** | optional | Container image pinned by **digest** only (see the compromise note) |
 | Python / uv | 3.14.3 / 0.12.18 | 3.14 via uv | OK |
 | gh | 2.94.0, logged in | for M8 CI | OK |
