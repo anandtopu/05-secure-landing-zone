@@ -17,6 +17,7 @@ This repo is where **P05, the Secure Landing Zone as Code** from the FDE Onboard
   - **LIVE:** only after I type the exact phrase `go live for M<n>` for that milestone. Then every `tofu apply` (and any mutating AWS CLI call) is preceded by a saved plan (`tofu plan -out`), a plain-English summary of every resource it creates, changes or destroys, and an estimated cost. Claude Code's permission prompt will also stop you; that is intentional (`.claude/settings.json`). I approve each apply individually.
 - Account count: the spec lists 7 accounts. In LIVE mode, propose creating only what the current milestone needs (start with `log-archive`, `security-tooling` and `scp-test`), and get my OK for each additional account. Account emails use plus-addressing on an address I give you.
 - Test every SCP in `scp-test` under the PolicyStaging OU first. Never attach a new deny policy to the root or to Workloads without my explicit OK. Keep a written break-glass path: the management account is never restricted by SCPs.
+- Object Lock in the lab is **GOVERNANCE mode with 1-day default retention**, never COMPLIANCE (COMPLIANCE retention can't be shortened or removed, even by root). The M5 Conftest policy enforces this; don't relax it.
 - Costs: follow the spec's cost table. Create interface endpoints only for the M7 test and destroy them the same session. No NAT gateways. GuardDuty and Security Hub CSPM are on trial; note the trial end dates in BUILD_LOG.
 - Teardown is its own milestone (M9) with a written plan. Never run `tofu destroy` or `aws organizations close-account` without my explicit OK for that exact command.
 
@@ -34,7 +35,7 @@ The spec federates IAM Identity Center with Entra ID (SAML + SCIM). If I don't h
 | Checkov | **missing** | 3.3.x | `uv tool install checkov==3.3.*` |
 | OPA / Conftest | **missing** | 1.21 / 0.70.x | GitHub releases into `tools/bin/` |
 | Trivy | **missing** | optional | Container image pinned by **digest** only (see the compromise note) |
-| Python / uv | 3.12 / 0.11.7 | 3.14 via uv | `uv python install 3.14` |
+| Python / uv | 3.14.3 / 0.12.18 | 3.14 via uv | OK |
 | gh | 2.94.0, logged in | for M8 CI | OK |
 Run `pwsh -File scripts/check-prereqs.ps1` at the start of every session.
 
@@ -43,7 +44,8 @@ Run `pwsh -File scripts/check-prereqs.ps1` at the start of every session.
 - Long operations (`tofu apply` of the org stack, waiting for account creation, waiting for CloudTrail delivery up to 15 min) run in the background and are polled.
 
 ## Safety rules (non-negotiable)
-- Never create IAM access keys and never create IAM users from code. The spec's M1 break-glass users (console password + hardware MFA, no access keys) are created **by me, by hand**; you write the runbook and verify the result read-only. Never store AWS secrets in files, never print credentials or read `.tfstate` contents into the conversation (state can hold sensitive values). Use `tofu output` or `tofu state list` for inspection.
+- Never create IAM access keys and never create IAM users from code. The spec's M1 break-glass users (console password + hardware MFA, no access keys) are created **by me, by hand**; you write the runbook and verify the result read-only. Never store AWS secrets in files, never print credentials or read `.tfstate` contents into the conversation (state can hold sensitive values). Use `tofu output` (without `-json`/`-raw`, which print sensitive values unmasked) or `tofu state list` for inspection. Never run `tofu state pull` or a bare `tofu show`; `tofu show -json <planfile>` for Conftest is fine.
+- `.claude/settings.json` forces a permission prompt for mutating `tofu`/`terraform`/`aws` commands and `git push`. Never rephrase, wrap or script a command to avoid a prompt (other flag order, env-var prefixes, a `.ps1`/`.sh` wrapper, the SDK). If a rule seems to miss a mutating command, stop and tell me so the rule gets fixed.
 - Never kill processes by name. Never run destructive commands outside this project.
 - Never weaken a guardrail to make a gate pass. If an SCP blocks something legitimate, explain why and propose a scoped exception for me to approve.
 - No force-push or history rewrite. Commit after each milestone. Push or open PRs only when I ask (M8's CI needs a GitHub repo; ask me first).
