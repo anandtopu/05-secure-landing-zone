@@ -1,0 +1,25 @@
+# Terraform / OpenTofu
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+tfplan*
+plan.json
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+.terraform.tfstate.lock.info
+# never commit real variable values or credentials
+*.auto.tfvars
+secrets.tfvars
+lz.env
+lz.env.ps1
+.aws/
+*.pem
+# python / tools
+.venv/
+__pycache__/
+tools/bin/
+# local Claude settings (personal overrides)
+.claude/settings.local.json
